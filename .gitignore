@@ -1,0 +1,15 @@
+# tooling / diagnostics
+.playwright-mcp/
+_diag/
+diag-*.png
+sweep-*.png
+bg-check.png
+01-closed.png
+02-midopen.png
+
+# unused local assets
+white-paper-texture.jpg
+damask-seamless-pattern-element-classical-luxury-old-fashioned-damask-ornament_1217-1129.avif
+9.png
+8
+hide

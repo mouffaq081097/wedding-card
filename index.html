@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0a1230" />
+<title>Ousaima &amp; Mouffaq — You're Invited</title>
+<meta name="description" content="A wedding invitation for Ousaima &amp; Mouffaq. Tap to open." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='%23b0791f'/%3E%3Ccircle cx='32' cy='32' r='28' fill='none' stroke='%235e360a' stroke-width='3'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-size='34' font-family='serif' fill='%235e360a'%3E%D9%88%3C/text%3E%3C/svg%3E" />
+
+<!-- Fonts: Arabic calligraphy (Amiri, Aref Ruqaa, Reem Kufi) + English (Cinzel, Cormorant, Great Vibes) -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa:wght@400;700&family=Cinzel:wght@400;500;600;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&family=Italianno&family=Reem+Kufi:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ============================================================= -->
+<!-- HIDDEN SVG DEFS — texture filters, gradients & reusable shapes -->
+<!-- ============================================================= -->
+<svg class="svg-defs" aria-hidden="true" focusable="false" width="0" height="0">
+  <defs>
+    <!-- Gold leaf gradient -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"  stop-color="#7c5a16" />
+      <stop offset="18%" stop-color="#d9b65a" />
+      <stop offset="38%" stop-color="#f7e7a8" />
+      <stop offset="52%" stop-color="#caa345" />
+      <stop offset="70%" stop-color="#f3dd92" />
+      <stop offset="100%" stop-color="#82601a" />
+    </linearGradient>
+
+    <!-- Brighter gold for highlights / shine sweep -->
+    <linearGradient id="goldShine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#b8901f" />
+      <stop offset="45%"  stop-color="#fff4cf" />
+      <stop offset="55%"  stop-color="#fff4cf" />
+      <stop offset="100%" stop-color="#b8901f" />
+    </linearGradient>
+
+    <!-- Deep wax radial fill (rich royal gold / amber wax) -->
+    <radialGradient id="waxGrad" cx="38%" cy="34%" r="75%">
+      <stop offset="0%"   stop-color="#f6d98a" />
+      <stop offset="22%"  stop-color="#d8a93f" />
+      <stop offset="55%"  stop-color="#b0791f" />
+      <stop offset="82%"  stop-color="#8a5512" />
+      <stop offset="100%" stop-color="#5e360a" />
+    </radialGradient>
+
+    <!-- Wax rim shadow -->
+    <radialGradient id="waxRim" cx="50%" cy="50%" r="50%">
+      <stop offset="76%" stop-color="rgba(0,0,0,0)" />
+      <stop offset="92%" stop-color="rgba(60,28,4,0.55)" />
+      <stop offset="100%" stop-color="rgba(30,12,0,0.0)" />
+    </radialGradient>
+
+    <!-- ===== Wax molten-edge + glossy relief filter ===== -->
+    <filter id="waxTexture" x="-25%" y="-25%" width="150%" height="150%">
+      <!-- irregular molten edge via displacement -->
+      <feTurbulence type="fractalNoise" baseFrequency="0.028 0.031" numOctaves="4" seed="11" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="9" xChannelSelector="R" yChannelSelector="G" result="disp" />
+      <!-- fine surface grain for the matte-wax body -->
+      <feTurbulence type="fractalNoise" baseFrequency="0.42" numOctaves="3" seed="4" result="grain" />
+      <feColorMatrix in="grain" type="saturate" values="0" result="grainG" />
+      <feComponentTransfer in="grainG" result="grainA">
+        <feFuncA type="linear" slope="0.10" intercept="0" />
+      </feComponentTransfer>
+      <feComposite in="grainA" in2="disp" operator="in" result="grainMasked" />
+      <!-- glossy specular highlight to read as raised, slightly wet wax -->
+      <feGaussianBlur in="disp" stdDeviation="2.2" result="blur" />
+      <feSpecularLighting in="blur" surfaceScale="3.4" specularConstant="0.85" specularExponent="16"
+                          lighting-color="#fff6df" result="spec">
+        <fePointLight x="-90" y="-120" z="220" />
+      </feSpecularLighting>
+      <feComposite in="spec" in2="disp" operator="in" result="specMasked" />
+      <feMerge>
+        <feMergeNode in="disp" />
+        <feMergeNode in="grainMasked" />
+        <feMergeNode in="specMasked" />
+      </feMerge>
+    </filter>
+
+    <!-- ===== Embossed monogram (debossed into wax) ===== -->
+    <filter id="waxEmboss" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.1" result="b" />
+      <feSpecularLighting in="b" surfaceScale="-3" specularConstant="0.9" specularExponent="18"
+                          lighting-color="#fff2cf" result="s">
+        <feDistantLight azimuth="235" elevation="55" />
+      </feSpecularLighting>
+      <feComposite in="s" in2="SourceAlpha" operator="in" result="sc" />
+      <feComposite in="SourceGraphic" in2="sc" operator="arithmetic" k1="0" k2="1" k3="0.9" k4="0" />
+    </filter>
+
+    <!-- Soft drop shadow for floating elements -->
+    <filter id="softShadow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#04060f" flood-opacity="0.55" />
+    </filter>
+
+    <!-- Reusable ornate corner flourish (gold filigree) -->
+    <g id="cornerFlourish">
+      <path d="M4,86 C4,52 4,30 18,18 C30,8 52,6 86,6"
+            fill="none" stroke="url(#goldGrad)" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M12,86 C12,58 14,40 26,30 C36,22 54,18 86,16"
+            fill="none" stroke="url(#goldGrad)" stroke-width="1.1" stroke-linecap="round" opacity="0.9"/>
+      <path d="M20,86 C20,64 22,52 30,46 C36,42 40,34 40,22 C40,14 44,9 52,8"
+            fill="none" stroke="url(#goldGrad)" stroke-width="1.1" stroke-linecap="round" opacity="0.85"/>
+      <path d="M40,22 C40,30 46,36 54,36 C60,36 64,32 64,26"
+            fill="none" stroke="url(#goldGrad)" stroke-width="1.1" stroke-linecap="round" opacity="0.85"/>
+      <circle cx="22" cy="22" r="2.6" fill="url(#goldShine)"/>
+      <circle cx="54" cy="36" r="2.0" fill="url(#goldShine)"/>
+      <circle cx="86" cy="6" r="2.4" fill="url(#goldShine)"/>
+      <path d="M6,86 l0,0" stroke="url(#goldGrad)"/>
+    </g>
+
+    <!-- Reusable horizontal divider ornament -->
+    <g id="dividerOrn">
+      <line x1="0" y1="12" x2="86" y2="12" stroke="url(#goldGrad)" stroke-width="1.4"/>
+      <line x1="214" y1="12" x2="300" y2="12" stroke="url(#goldGrad)" stroke-width="1.4"/>
+      <path d="M150,2 L160,12 L150,22 L140,12 Z" fill="url(#goldGrad)"/>
+      <path d="M150,5 L157,12 L150,19 L143,12 Z" fill="#0a1230"/>
+      <circle cx="150" cy="12" r="2.4" fill="url(#goldShine)"/>
+      <path d="M96,12 q14,-9 24,0 q-14,9 -24,0 Z" fill="url(#goldGrad)" opacity="0.95"/>
+      <path d="M204,12 q-14,-9 -24,0 q14,9 24,0 Z" fill="url(#goldGrad)" opacity="0.95"/>
+      <circle cx="90" cy="12" r="1.8" fill="url(#goldShine)"/>
+      <circle cx="210" cy="12" r="1.8" fill="url(#goldShine)"/>
+    </g>
+
+    <!-- ===== Green variants (for the invitation dividers) ===== -->
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"  stop-color="#1c4730" />
+      <stop offset="18%" stop-color="#3f8557" />
+      <stop offset="38%" stop-color="#a9d0ba" />
+      <stop offset="52%" stop-color="#357049" />
+      <stop offset="70%" stop-color="#8fc2a3" />
+      <stop offset="100%" stop-color="#1c4730" />
+    </linearGradient>
+    <linearGradient id="greenShine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#357049" />
+      <stop offset="45%"  stop-color="#d8ecdf" />
+      <stop offset="55%"  stop-color="#d8ecdf" />
+      <stop offset="100%" stop-color="#357049" />
+    </linearGradient>
+
+    <!-- Reusable horizontal divider ornament — green -->
+    <g id="dividerOrnGreen">
+      <line x1="0" y1="12" x2="86" y2="12" stroke="url(#greenGrad)" stroke-width="1.4"/>
+      <line x1="214" y1="12" x2="300" y2="12" stroke="url(#greenGrad)" stroke-width="1.4"/>
+      <path d="M150,2 L160,12 L150,22 L140,12 Z" fill="url(#greenGrad)"/>
+      <path d="M150,5 L157,12 L150,19 L143,12 Z" fill="#163a26"/>
+      <circle cx="150" cy="12" r="2.4" fill="url(#greenShine)"/>
+      <path d="M96,12 q14,-9 24,0 q-14,9 -24,0 Z" fill="url(#greenGrad)" opacity="0.95"/>
+      <path d="M204,12 q-14,-9 -24,0 q14,9 24,0 Z" fill="url(#greenGrad)" opacity="0.95"/>
+      <circle cx="90" cy="12" r="1.8" fill="url(#greenShine)"/>
+      <circle cx="210" cy="12" r="1.8" fill="url(#greenShine)"/>
+    </g>
+  </defs>
+</svg>
+
+<!-- ============================================================= -->
+<!-- BACKGROUND LAYERS                                              -->
+<!-- ============================================================= -->
+<div class="backdrop" aria-hidden="true">
+  <div class="backdrop__sky"></div>
+  <div class="backdrop__lattice"></div>
+  <div class="backdrop__glow"></div>
+  <div class="backdrop__vignette"></div>
+  <div class="backdrop__overlay"></div>
+</div>
+<canvas id="particles" class="particles" aria-hidden="true"></canvas>
+
+<!-- floral arch swag across the very top of the page -->
+<img class="top-arch" src="Gemini_Generated_Image_pcdqxbpcdqxbpcdq.png" alt="" aria-hidden="true" />
+
+<!-- ============================================================= -->
+<!-- TOP-RIGHT CONTROLS                                             -->
+<!-- ============================================================= -->
+<div class="controls">
+  <button id="soundToggle" class="ctrl-btn" type="button" aria-pressed="false" title="Toggle sound" aria-label="Toggle sound">
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+      <path class="ic-base" d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/>
+      <path class="ic-wave" d="M16 8.5a5 5 0 010 7M18.5 6a8.5 8.5 0 010 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+    </svg>
+  </button>
+</div>
+
+<!-- ============================================================= -->
+<!-- STAGE: the 3D envelope scene                                   -->
+<!-- ============================================================= -->
+<main class="stage" id="stage">
+
+  <section class="scene" id="scene" aria-label="Wedding invitation envelope">
+    <!-- the whole envelope (rotates in 3D on open) -->
+    <button class="envelope is-photo" id="envelope" type="button" aria-expanded="false"
+            aria-label="Tap to open the wedding invitation of Ousaima and Mouffaq">
+
+      <!-- photo envelope: closed shown first, crossfades to open on tap -->
+      <img class="env-photo env-photo--open"   src="Opened.png" alt="" aria-hidden="true" />
+      <img class="env-photo env-photo--closed" src="Closed.png" alt="" aria-hidden="true" />
+
+      <!-- shadow puddle under the envelope -->
+      <span class="envelope__shadow" aria-hidden="true"></span>
+
+      <!-- back panel of the envelope -->
+      <span class="env-face env-back" aria-hidden="true">
+        <span class="paper-grain"></span>
+      </span>
+
+      <!-- the letter / invitation card tucked inside (rising teaser) -->
+      <article class="letter" id="letter" aria-hidden="true">
+        <span class="paper-grain"></span>
+        <div class="letter__inner">
+          <span class="letter__rule letter__rule--top"></span>
+          <span class="letter__mono">و</span>
+          <span class="letter__names">Ousaima &amp; Mouffaq</span>
+          <span class="letter__ar" dir="rtl" lang="ar">أُسَيْمَة &amp; مُوَفَّق</span>
+          <span class="letter__rule letter__rule--bot"></span>
+          <span class="letter__pull">opening…</span>
+        </div>
+      </article>
+
+      <!-- front face of the envelope (full panel — completes the closed look) -->
+      <span class="env-face env-front" aria-hidden="true">
+        <span class="paper-grain"></span>
+        <span class="env-front__seam env-front__seam--l"></span>
+        <span class="env-front__seam env-front__seam--r"></span>
+      </span>
+
+      <!-- damask liner in the flap's footprint, revealed when the flap lifts -->
+      <span class="flap-liner" aria-hidden="true"></span>
+
+      <!-- FRONT POCKET WALL — sits IN FRONT of the rising letter so the card tucks
+           into it: its upward-pointing top edge is the pocket mouth the card slides
+           up out of. Carries the bottom fold lines + monogram (the pocket face). -->
+      <span class="env-pocket" aria-hidden="true">
+        <span class="paper-grain"></span>
+        <!-- pocket-mouth fold lines: two lines from the bottom corners converging
+             at the wax-seal centre (50, 58) → the classic envelope-back V -->
+        <svg class="env-pocket__folds" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0 100 L50 58 L100 100" fill="none" stroke="rgba(64,72,86,.22)" stroke-width="0.4" stroke-linejoin="round"/>
+          <path d="M0 100 L50 58.7 L100 100" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="0.28" stroke-linejoin="round"/>
+        </svg>
+        <span class="env-front__monogram">و</span>
+      </span>
+
+      <!-- the closing flap (two-sided: cream outside, gold liner inside) -->
+      <span class="flap" id="flap" aria-hidden="true">
+        <span class="flap__face flap__outside"><span class="paper-grain"></span></span>
+        <span class="flap__face flap__inside"></span>
+      </span>
+
+      <!-- handwritten invitation lines on the flap, above the seal -->
+      <span class="env-addr" aria-hidden="true">
+        <span class="env-addr__script">You are lovingly invited to the wedding of</span>
+        <span class="env-addr__names">OUSAIMA &amp; MOUFFAQ</span>
+        <span class="env-addr__date">12 . 09 . 2026</span>
+      </span>
+
+      <!-- wax seal sealing the flap to the pocket -->
+      <img class="wax-seal" id="waxSeal" src="image-from-rawpixel-id-13273648-png.png" alt="" aria-hidden="true" />
+    </button>
+
+    <!-- "tap to open" hint -->
+    <div class="hint" id="hint">
+      <span class="hint__chevron" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </div>
+  </section>
+
+  <!-- porcelain plate with the flower resting on top, anchored to the bottom -->
+  <div class="plate-deco" aria-hidden="true">
+    <img class="plate-deco__plate" src="png-white-dish-porcelain-plate-white-background_53876-701093.png" alt="" />
+    <img class="plate-deco__flower" src="image-from-rawpixel-id-6184835-png.png" alt="" />
+  </div>
+
+  <!-- rose & lavender sprig laid next to the plate (right + flipped left) -->
+  <img class="side-bouquet" src="ChatGPT%20Image%20Jun%206%2C%202026%2C%2009_50_02%20AM.png" alt="" aria-hidden="true" />
+  <img class="side-bouquet side-bouquet--left" src="ChatGPT%20Image%20Jun%206%2C%202026%2C%2009_50_02%20AM.png" alt="" aria-hidden="true" />
+
+  <!-- Replay / close button (appears after open) -->
+  <button id="replay" class="replay" type="button" hidden aria-label="Close the invitation and reseal the envelope">
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 12a9 9 0 109-9 9 9 0 00-7 3.3M3 4v4h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span>Reseal</span>
+  </button>
+</main>
+
+<!-- ============================================================= -->
+<!-- FULL INVITATION (revealed after the envelope opens)           -->
+<!-- lives at body level so it is free of the 3D transform context -->
+<!-- ============================================================= -->
+<section class="invitation" id="invitation" aria-hidden="true" tabindex="-1" aria-label="Wedding invitation">
+  <div class="invitation__sheet">
+    <span class="paper-grain"></span>
+
+    <!-- floral border: top cap, continuous side strip (tiled), bottom cap -->
+    <div class="sheet-floral-strip" aria-hidden="true"></div>
+    <img class="sheet-floral sheet-floral--top" src="up.png" alt="" aria-hidden="true" />
+    <img class="sheet-floral sheet-floral--bot" src="down.png" alt="" aria-hidden="true" />
+
+    <div class="invitation__scroll" id="invitationScroll">
+      <!-- content injected by script.js -->
+    </div>
+  </div>
+</section>
+
+<!-- subtle film grain over everything -->
+<div class="film-grain" aria-hidden="true"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
