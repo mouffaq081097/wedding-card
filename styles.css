@@ -107,7 +107,7 @@ body.is-reading{overflow:hidden;}
 .backdrop__lattice{
   position:absolute; inset:-10%;
   overflow:hidden;
-  opacity:.10;
+  opacity:.04;
   mask-image:radial-gradient(120% 90% at 50% 40%, #000 35%, transparent 85%);
   -webkit-mask-image:radial-gradient(120% 90% at 50% 40%, #000 35%, transparent 85%);
 }
@@ -142,8 +142,8 @@ body.is-reading{overflow:hidden;}
 }
 .backdrop__vignette{
   position:absolute; inset:0;
-  /* soft neutral vignette for depth over the light marble (was a heavy dark frame) */
-  background:radial-gradient(125% 100% at 50% 42%, transparent 58%, rgba(86,92,104,.10) 84%, rgba(64,70,82,.20) 100%);
+  /* vignette removed — no shadow framing on the background */
+  background:none;
 }
 
 /* ---------- 4. Particles + controls ---------- */
@@ -544,9 +544,7 @@ body.is-open .invitation__sheet{
   margin:auto;
   background:#ffffff;
   border-radius:8px;
-  box-shadow:
-    0 40px 90px rgba(2,4,12,.7),
-    0 8px 24px rgba(2,4,12,.5);
+  box-shadow:none;
   padding:clamp(26px,5vw,52px) clamp(20px,4.5vw,46px);
   transform:translateY(40px) scale(.96) rotateX(8deg);
   opacity:0;
@@ -705,7 +703,8 @@ body.is-open .replay{display:inline-flex; animation:fadeUp .6s ease 1s both;}
 /* ---------- 12. Responsive & reduced motion ---------- */
 @media (max-width:540px){
   :root{--env-w:min(86vw,420px);}
-  .invitation__sheet{padding:30px 20px;}
+  .invitation{padding:8px;}
+  .invitation__sheet{width:100vw; border-radius:0; padding:30px 16px;}
 }
 @media (max-height:680px){
   .scene{transform:scale(.9);}
