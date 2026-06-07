@@ -7,58 +7,53 @@
    ================================================================= */
 
 const WEDDING = {
-  /* --- Couple --- */
+  /* --- العروسان --- */
   names: {
-    en: "Ousaima & Mouffaq",
-    // « EDIT » Please confirm the exact Arabic spelling of your names.
-    ar: { bride: "أُسَيْمَة", groom: "مُوَفَّق" },
+    ar: { bride: "أُسَيْمَة الفَرَّا", groom: "مُوَفَّق دَلُّول" },
   },
-  monogram: "و", // shown on the wax seal & envelope (Arabic "wa" = "and")
+  monogram: "و", // يظهر على ختم الشمع والظرف ("و" = حرف العطف)
 
-  /* --- Opening line / families --- */
+  /* --- سطر الافتتاح / العائلتان --- */
   bismillah: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
-  eyebrowEn: "Together with their families",
-  eyebrowAr: "بِمَشيئةِ الله، تتشرّفُ العائلتان بدعوتكم",
+  eyebrow: "بِقُلوبٍ مَلَؤُها البَهجَةُ والسُّرورُ، يَتَشَرَّفُ آلُ دَلُّول وآلُ فَرَّا بِدَعوَتِكُم لِحُضورِ حَفلِ زَفافِ نَجلِهِمُ الشّابِّ:",
 
-  /* --- Quote / verse (Qur'an 30:21 — the classic marriage verse) --- */
+  /* --- الآية (الروم ٣٠:٢١ — آية الزواج) --- */
   quote: {
     ar: "وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً",
-    en: "“And among His signs is that He created for you mates from among yourselves, that you may dwell in tranquility with them, and He placed between you affection and mercy.”",
-    ref: "Qur'an 30:21",
+    ref: "سورة الروم ٣٠:٢١",
   },
 
-  /* --- When --- */ // « EDIT »
-  date: { en: "Saturday, the Twelfth of September", year: "2026", ar: "السبت ١٢ سبتمبر ٢٠٢٦" },
-  time: { en: "Ceremony 5:00 PM · Reception to follow", ar: "حفل الزفاف الساعة ٥:٠٠ مساءً" },
+  /* --- الموعد --- */ // « عدّل »
+  date: { ar: "السَّبتُ ١١ نوفمبر ٢٠٢٣" },
+  time: { ar: "السّاعَةُ السّابِعَةُ مَساءً" },
 
-  /* --- Where --- */ // « EDIT »
+  /* --- المكان --- */ // « عدّل »
   venue: {
-    name: { en: "The Grand Pearl Ballroom", ar: "قاعة اللؤلؤة الكبرى" },
-    address: "123 Riverside Avenue · City, Country",
-    mapUrl: "https://maps.google.com/?q=The+Grand+Pearl+Ballroom",
+    name: { ar: "فُندُقُ ويستِن دُبَيّ" },
+    address: "شاطِئُ المِيناءِ السِّياحيِّ",
+    mapUrl: "https://maps.google.com/?q=The+Westin+Dubai+Mina+Seyahi",
   },
 
-  /* --- Schedule of the day --- */ // « EDIT »
+  /* --- برنامج اليوم --- */ // « عدّل »
   schedule: [
-    { t: "4:30 PM", e: "Guests arrive", ar: "وصول الضيوف" },
-    { t: "5:00 PM", e: "Marriage ceremony", ar: "عقد القران" },
-    { t: "6:30 PM", e: "Cocktail & photographs", ar: "استقبال وصور" },
-    { t: "8:00 PM", e: "Dinner & celebration", ar: "العشاء والاحتفال" },
+    { t: "٤:٣٠ م", ar: "وصول الضيوف" },
+    { t: "٥:٠٠ م", ar: "عقد القران" },
+    { t: "٦:٣٠ م", ar: "استقبال وصور" },
+    { t: "٨:٠٠ م", ar: "العشاء والاحتفال" },
   ],
 
-  /* --- Dress code --- */ // « EDIT »
-  dress: { en: "Formal attire · Midnight blue & gold", ar: "ملابس رسمية" },
+  /* --- الزيّ --- */ // « عدّل »
+  dress: { ar: "ملابس رسمية" },
 
-  /* --- RSVP --- */ // « EDIT »
+  /* --- تأكيد الحضور --- */ // « عدّل »
   rsvp: {
-    noteEn: "Kindly respond before the 1st of August, 2026",
     noteAr: "نرجو تأكيد الحضور قبل ١ أغسطس ٢٠٢٦",
     contact: "+1 (555) 123-4567",
-    href: "tel:+15551234567", // or "mailto:rsvp@example.com" or a form link
+    href: "tel:+15551234567", // أو "mailto:rsvp@example.com" أو رابط نموذج
   },
 
-  /* --- Closing blessing --- */
-  foot: { ar: "بارَكَ اللهُ لهما وبارَكَ عليهما وجَمَعَ بينهما في خير", en: "With love & gratitude" },
+  /* --- دعاء الختام --- */
+  foot: { ar: "وبِحُضورِكُم تَزدادُ سَعادَتُنا وتَزدَهِرُ أفراحُنا" },
 };
 
 /* =================================================================
@@ -77,56 +72,50 @@ const WEDDING = {
   /* ---------- 1. Render the invitation content ---------- */
   function renderInvitation() {
     const W = WEDDING;
-    const dividerSVG = `<svg viewBox="0 0 300 24" aria-hidden="true"><use href="#dividerOrnGreen"/></svg>`;
+    const dividerSVG = `<span class="inv-divider__orn" aria-hidden="true" style="display:block;width:100%;height:100%;background-color:var(--gold-0);-webkit-mask:url('divider.png') center/contain no-repeat;mask:url('divider.png') center/contain no-repeat;"></span>`;
     const parts = [];
 
-    parts.push(reveal(`<div class="inv-bismillah" dir="rtl" lang="ar">${esc(W.bismillah)}</div>`));
-
-    parts.push(reveal(
-      `<div class="inv-eyebrow">${esc(W.eyebrowEn)}</div>
-       <div class="inv-eyebrow inv-eyebrow--ar" dir="rtl" lang="ar">${esc(W.eyebrowAr)}</div>`
-    ));
-
-    parts.push(reveal(
-      `<h1 class="inv-names">Ousaima<span class="inv-amp">&amp;</span>Mouffaq</h1>
-       <div class="inv-names-ar" dir="rtl" lang="ar">${esc(W.names.ar.bride)} <span style="color:var(--gold-1)">و</span> ${esc(W.names.ar.groom)}</div>`
-    ));
-
-    parts.push(`<div class="inv-divider">${dividerSVG}</div>`);
+    parts.push(reveal(`<div class="inv-bismillah">${esc(W.bismillah)}</div>`));
 
     parts.push(reveal(
       `<div class="inv-quote">
-         <p class="inv-quote__ar" dir="rtl" lang="ar">${esc(W.quote.ar)}</p>
-         <p class="inv-quote__en">${esc(W.quote.en)}</p>
+         <p class="inv-quote__ar">${esc(W.quote.ar)}</p>
          <span class="inv-quote__ref">— ${esc(W.quote.ref)} —</span>
        </div>`
     ));
 
     parts.push(`<div class="inv-divider">${dividerSVG}</div>`);
 
-    // Date & time
     parts.push(reveal(
-      `<div class="inv-block">
-         <div class="inv-label">The Day</div>
-         <div class="inv-date">${esc(W.date.en)} <span style="color:var(--gold-0)">${esc(W.date.year)}</span>
-           <span class="ar" dir="rtl" lang="ar">${esc(W.date.ar)}</span>
-         </div>
-         <div class="inv-time">${esc(W.time.en)} <span class="ar" dir="rtl" lang="ar">— ${esc(W.time.ar)}</span></div>
+      `<div class="inv-eyebrow inv-eyebrow--ar">${esc(W.eyebrow)}</div>`
+    ));
+
+    parts.push(reveal(
+      `<div class="inv-couples">
+         <div class="inv-couple"><span class="inv-couple__name">${esc(W.names.ar.groom)}</span></div>
+         <div class="inv-couple"><span class="inv-couple__name">${esc(W.names.ar.bride)}</span></div>
        </div>`
     ));
 
-    // Venue
+    parts.push(`<div class="inv-divider">${dividerSVG}</div>`);
+
+    // التاريخ والوقت
     parts.push(reveal(
       `<div class="inv-block">
-         <div class="inv-label">The Place</div>
-         <div class="inv-venue">${esc(W.venue.name.en)}
-           <span class="ar" dir="rtl" lang="ar">${esc(W.venue.name.ar)}</span>
-         </div>
-         <div class="inv-address">${esc(W.venue.address)}</div>
+         <div class="inv-label">اليَوم</div>
+         <div class="inv-date inv-date--inline"><span class="ar">${esc(W.date.ar)} <span class="inv-dt-sep">·</span> ${esc(W.time.ar)}</span></div>
+       </div>`
+    ));
+
+    // المكان
+    parts.push(reveal(
+      `<div class="inv-block">
+         <div class="inv-label">المَكان</div>
+         <div class="inv-venue inv-venue--inline"><span class="ar">${esc(W.venue.name.ar)} <span class="inv-dt-sep">·</span> ${esc(W.venue.address)}</span></div>
          <div class="inv-actions">
            <a class="inv-btn inv-btn--ghost" href="${esc(W.venue.mapUrl)}" target="_blank" rel="noopener">
              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
-             View map
+             عرض الموقع
            </a>
          </div>
        </div>`
@@ -134,28 +123,28 @@ const WEDDING = {
 
     parts.push(`<div class="inv-divider">${dividerSVG}</div>`);
 
-    // RSVP
+    // تأكيد الحضور
     parts.push(reveal(
       `<div class="inv-block">
-         <div class="inv-label">Kindly Respond</div>
+         <div class="inv-label">يُرجى تَأكيدُ الحُضور</div>
          <div class="inv-actions">
-           <a class="inv-btn" href="${esc(W.rsvp.href)}">
+           <a class="inv-btn" href="${esc(W.rsvp.href)}" dir="ltr">
              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>
-             RSVP · ${esc(W.rsvp.contact)}
+             ${esc(W.rsvp.contact)}
            </a>
          </div>
-         <p class="inv-rsvp-note">${esc(W.rsvp.noteEn)}<br><span class="ar" dir="rtl" lang="ar">${esc(W.rsvp.noteAr)}</span></p>
+         <p class="inv-rsvp-note"><span class="ar">${esc(W.rsvp.noteAr)}</span></p>
        </div>`
     ));
 
     parts.push(reveal(
-      `<div class="inv-foot" dir="rtl" lang="ar">${esc(W.foot.ar)}<span class="en">${esc(W.foot.en)}</span></div>`
+      `<div class="inv-foot">${esc(W.foot.ar)}</div>`
     ));
 
     $("#invitationScroll").innerHTML = parts.join("");
 
-    // sync teaser + title with configured names
-    document.title = `${W.names.en} — You're Invited`;
+    // مزامنة العنوان مع أسماء العروسين
+    document.title = `${W.names.ar.bride} و ${W.names.ar.groom} — دعوة زفاف`;
   }
 
   /* ---------- 2. Particle field (floating gold motes) ---------- */
