@@ -588,7 +588,7 @@ body.is-open .invitation__sheet{
   transform:translateY(40px) scale(.96) rotateX(8deg);
   opacity:0;
   transition:transform 1s var(--ease-luxe) .25s, opacity .9s ease .25s;
-  overflow:hidden;
+  overflow:hidden; /* hard clip — prevents any content from bleeding past the floral border */
 }
 /* floral swags pinned to the top and bottom edges of the sheet */
 .sheet-floral{
@@ -707,7 +707,7 @@ body.is-open .invitation__sheet{
 .inv-venue--stack{display:flex; flex-direction:column; align-items:center; gap:3px;}
 .inv-line{
   display:block; max-width:100%;
-  white-space:normal; overflow-wrap:break-word; text-wrap:balance;
+  white-space:normal; overflow-wrap:anywhere; word-break:break-word; text-wrap:balance;
   line-height:1.45;
 }
 .inv-line--lead{
@@ -768,7 +768,7 @@ body.is-open .invitation__sheet{
 }
 .inv-btn svg{width:15px;height:15px;}
 
-.inv-rsvp-note{font-family:"Cormorant Garamond",serif; font-style:italic; font-size:clamp(13px,3.4vw,16px); color:var(--ink-soft); margin-top:10px;}
+.inv-rsvp-note{font-family:"Cormorant Garamond",serif; font-style:italic; font-size:clamp(13px,3.4vw,16px); color:var(--ink-soft); margin-top:10px; overflow-wrap:anywhere; word-break:break-word;}
 .inv-rsvp-note .ar{font-family:"Aref Ruqaa",serif; direction:rtl; font-style:normal;}
 
 .inv-foot{margin-top:22px; font-family:"Aref Ruqaa",serif; color:var(--gold-0); font-size:clamp(14px,3.6vw,18px); direction:rtl;}
@@ -1022,9 +1022,10 @@ input.rsvp-input[type="number"]{direction:ltr; text-align:right; font-family:"Re
 .inv-notice{
   font-family:"Aref Ruqaa",serif; direction:rtl; text-align:center;
   font-size:clamp(13px,3.4vw,16px); color:var(--ink);
-  margin:18px auto 0; padding:10px 16px;
+  margin:18px 0 0; padding:10px 16px;
   border:1px solid rgba(46,107,67,.28);
   border-radius:4px;
   background:rgba(46,107,67,.05);
-  max-width:340px;
+  width:100%; box-sizing:border-box;
+  overflow-wrap:anywhere; word-break:break-word;
 }
