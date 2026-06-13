@@ -66,7 +66,8 @@ placeholders — replace them with your real details:
 | `venue` | Name (EN/AR), address, and the **Google Maps link** |
 | `schedule[]` | The order of the day (time, event, Arabic) |
 | `dress` | Dress code |
-| `rsvp` | RSVP note, contact, and the button link (`tel:` / `mailto:` / URL) |
+| `rsvp` | RSVP note + the **Google Apps Script endpoint** for the form (see below) |
+| `countdownTarget` | The wedding date/time the top countdown counts down to (ISO 8601 with timezone, e.g. `2026-07-11T19:00:00+04:00` for Sharjah) |
 | `foot` | Closing blessing |
 | `monogram` | The letter shown on the wax seal (default `و` = "and") |
 
@@ -74,6 +75,65 @@ placeholders — replace them with your real details:
 > `names.ar` — I used my best transliteration of *Ousaima* (`أُسَيْمَة`) and
 > *Mouffaq* (`مُوَفَّق`) as placeholders. Correct them to exactly how you
 > write them.
+
+### ⏳ The countdown
+
+A small glass countdown sits at the top of the screen **while the envelope is
+still closed** (it fades away the moment the envelope opens). It counts down to
+`WEDDING.countdownTarget` in `script.js`. Use a full ISO‑8601 timestamp **with a
+timezone offset** so it shows the same moment for every guest, wherever they
+are — the default `2026-07-11T19:00:00+04:00` is 7:00 PM Sharjah time. When the
+moment arrives it switches to a celebratory line.
+
+### 📨 RSVP — email + private attendance list (one‑time setup)
+
+The RSVP form (name · number of guests · companions) emails you on every
+submission **and** records each reply in a private Google Sheet that only you
+can see. Because this is a static site, that bit runs on a free
+**Google Apps Script** web app. Set it up once:
+
+1. Create a new **Google Sheet** in your Google Drive (this becomes your private
+   attendance list — it is never shown on the public page).
+2. In the sheet: **Extensions → Apps Script**. Delete any sample code and paste:
+
+   ```js
+   function doPost(e) {
+     var lock = LockService.getScriptLock();
+     lock.waitLock(30000);
+     try {
+       var data = JSON.parse(e.postData.contents);
+       var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+       if (sheet.getLastRow() === 0) {
+         sheet.appendRow(['التاريخ', 'الاسم', 'عدد الحضور', 'المرافقون']);
+       }
+       sheet.appendRow([new Date(), data.name, data.guests, data.companions]);
+       MailApp.sendEmail({
+         to: 'mouffaq.dalloul@gmail.com',
+         subject: 'تأكيد حضور جديد: ' + data.name,
+         body: 'الاسم: ' + data.name +
+               '\nعدد الحضور: ' + data.guests +
+               '\nالمرافقون: ' + (data.companions || '-') +
+               '\nوقت التأكيد: ' + new Date()
+       });
+       return ContentService.createTextOutput(JSON.stringify({ ok: true }))
+         .setMimeType(ContentService.MimeType.JSON);
+     } catch (err) {
+       return ContentService.createTextOutput(JSON.stringify({ ok: false, error: String(err) }))
+         .setMimeType(ContentService.MimeType.JSON);
+     } finally {
+       lock.releaseLock();
+     }
+   }
+   ```
+
+3. **Deploy → New deployment → Web app.** Set **Execute as: Me** and
+   **Who has access: Anyone**. Authorise it when Google prompts (the email/sheet
+   run under *your* account, which is why only you can see the list).
+4. Copy the deployment **Web app URL** (it ends in `/exec`) and paste it into
+   `WEDDING.rsvp.endpoint` in `script.js`.
+
+That's it — confirmations now land in your inbox and in the sheet. Until the URL
+is set, the form stays visible and politely says RSVP isn't active yet.
 
 ### Changing the colours
 
@@ -86,7 +146,7 @@ entire card.
 ```
 index.html   markup, SVG texture filters & reusable ornaments, font links
 styles.css   theme tokens, textures, 3D envelope, animations, invitation layout
-script.js    WEDDING content config + engine (render, particles, sound, open/close)
+script.js    WEDDING content config + engine (render, particles, sound, countdown, RSVP, open/close)
 ```
 
 ## 🌐 Browser support

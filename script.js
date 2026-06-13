@@ -47,10 +47,13 @@ const WEDDING = {
 
   /* --- تأكيد الحضور --- */
   rsvp: {
-    noteAr: "يُرجى التَّكَرُّمُ بِتَأكيدِ قَبولِ الدَّعوَةِ عَبرَ إِرسالِ رِسالَةٍ تَأكيدِيَّةٍ إِلِكتُرونِيَّةٍ عَبرَ الرَّقم",
-    contact: "…….",
-    href: "#",
+    // بعد إعداد Google Apps Script (راجع README) الصق رابط الـ /exec هنا:
+    endpoint: "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE",
+    noteAr: "يُرجى التَّكَرُّمُ بِتَأكيدِ قَبولِ الدَّعوَةِ بِإِدخالِ اسمِكُم وأسماءِ مُرافِقيكُم",
   },
+
+  /* --- موعد الزفاف للعدّ التنازلي (توقيت الشارقة UTC+4) --- */
+  countdownTarget: "2026-07-11T19:00:00+04:00",
 
   /* --- دعاء الختام --- */
   foot: { ar: "بِحُضورِكُم يَكتَمِلُ فَرَحُنا ومَسَرَّتُنا.. دامَت دِيارُكُم عامِرَةً بِالأَفراحِ، مَعَ التَّأكيدِ على أَنَّ جَنَّةَ الأَطفالِ بُيوتُهُم" },
@@ -123,17 +126,32 @@ const WEDDING = {
 
     parts.push(`<div class="inv-divider">${dividerSVG}</div>`);
 
-    // تأكيد الحضور
+    // تأكيد الحضور — نموذج يُرسل بريداً ويُسجّل في قائمة خاصة
     parts.push(reveal(
       `<div class="inv-block">
-         <div class="inv-label">يُرجى تَأكيدُ الحُضور</div>
-         <div class="inv-actions">
-           <a class="inv-btn" href="${esc(W.rsvp.href)}" dir="ltr">
-             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>
-             ${esc(W.rsvp.contact)}
-           </a>
-         </div>
+         <div class="inv-label">تَأكيدُ الحُضور</div>
          <p class="inv-rsvp-note"><span class="ar">${esc(W.rsvp.noteAr)}</span></p>
+         <form class="rsvp-form" id="rsvpForm" novalidate>
+           <div class="rsvp-field">
+             <label class="rsvp-label" for="rsvpName">الاسمُ الكَريم</label>
+             <input class="rsvp-input" id="rsvpName" name="name" type="text" required
+                    autocomplete="name" placeholder="اكتُب اسمَك هنا" />
+           </div>
+           <div class="rsvp-field">
+             <label class="rsvp-label" for="rsvpGuests">عَدَدُ الحُضور (متضمّناً مرافِقيك)</label>
+             <input class="rsvp-input" id="rsvpGuests" name="guests" type="number"
+                    min="1" max="20" step="1" inputmode="numeric" value="1" />
+           </div>
+           <div class="rsvp-field">
+             <label class="rsvp-label" for="rsvpCompanions">أسماءُ المُرافِقين (اختياري)</label>
+             <textarea class="rsvp-input rsvp-textarea" id="rsvpCompanions" name="companions"
+                       rows="2" placeholder="أسماءُ مَن سيَحضُرون معك"></textarea>
+           </div>
+           <div class="inv-actions">
+             <button class="inv-btn rsvp-btn" type="submit" id="rsvpSubmit">تَأكيدُ الحُضور</button>
+           </div>
+           <p class="rsvp-status" id="rsvpStatus" role="status" aria-live="polite"></p>
+         </form>
        </div>`
     ));
 
@@ -143,8 +161,74 @@ const WEDDING = {
 
     $("#invitationScroll").innerHTML = parts.join("");
 
+    // ربط معالج إرسال النموذج (يُعاد البناء عند إعادة الختم، فنعيد الربط في كل مرّة)
+    wireRsvpForm();
+
     // مزامنة العنوان مع أسماء العروسين
     document.title = `${W.names.ar.bride} و ${W.names.ar.groom} — دعوة زفاف`;
+  }
+
+  /* ---------- RSVP form submission (email + private Google Sheet) ---------- */
+  function wireRsvpForm() {
+    const form = $("#rsvpForm");
+    if (!form) return;
+    const statusEl = $("#rsvpStatus");
+    const nameEl = $("#rsvpName");
+    const guestsEl = $("#rsvpGuests");
+    const companionsEl = $("#rsvpCompanions");
+    const submitBtn = $("#rsvpSubmit");
+
+    const setStatus = (msg, kind) => {
+      statusEl.textContent = msg;
+      statusEl.className = "rsvp-status is-shown" + (kind ? " is-" + kind : "");
+    };
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = (nameEl.value || "").trim();
+      if (!name) {
+        nameEl.classList.add("is-invalid");
+        nameEl.focus();
+        setStatus("الرجاء إدخال الاسم الكريم", "err");
+        return;
+      }
+      nameEl.classList.remove("is-invalid");
+
+      const endpoint = WEDDING.rsvp.endpoint;
+      if (!endpoint || endpoint.indexOf("PASTE_YOUR") === 0) {
+        setStatus("لم يُفعّل تأكيد الحضور بعد — يُرجى المحاولة لاحقاً", "err");
+        return;
+      }
+
+      const payload = {
+        name,
+        guests: (guestsEl.value || "1").trim(),
+        companions: (companionsEl.value || "").trim(),
+      };
+
+      submitBtn.disabled = true;
+      setStatus("…جارٍ الإرسال", "pending");
+
+      try {
+        await fetch(endpoint, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload),
+        });
+        // مع no-cors تكون الاستجابة معتمة؛ نجاح متفائل (السطر والبريد يُكتبان في الخادم)
+        setStatus("تمّ تأكيد حضوركم، شكراً لكم 🤍", "ok");
+        form.reset();
+        Particles.burst(reduceMotion ? 0 : 36);
+      } catch (err) {
+        setStatus("تعذّر الإرسال، تأكّد من اتصالك وحاول مجدداً", "err");
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+
+    // إزالة حالة الخطأ بمجرّد أن يبدأ الضيف بالكتابة
+    nameEl.addEventListener("input", () => nameEl.classList.remove("is-invalid"));
   }
 
   /* ---------- 2. Particle field (floating gold motes) ---------- */
@@ -282,6 +366,50 @@ const WEDDING = {
     return { setEnabled, chimeOpen, isEnabled: () => enabled };
   })();
 
+  /* ---------- 4b. Countdown to the wedding (Sharjah time) ---------- */
+  const Countdown = (() => {
+    const root = $("#countdown");
+    if (!root) return { start() {} };
+    const elDays = $("#cdDays"), elHours = $("#cdHours"),
+          elMins = $("#cdMins"), elSecs = $("#cdSecs");
+    const titleEl = root.querySelector(".countdown__title");
+    const target = new Date(WEDDING.countdownTarget).getTime();
+    let timer = 0;
+
+    // Western digits → Arabic-Indic, with optional zero-padding
+    const toAr = (n, pad) => {
+      let s = String(Math.max(0, n));
+      if (pad) s = s.padStart(pad, "0");
+      return s.replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[d]);
+    };
+
+    function tick() {
+      const diff = target - Date.now();
+      if (diff <= 0) {
+        root.classList.add("is-day");
+        if (titleEl) titleEl.textContent = "نحتفلُ اليوم 🤍";
+        clearInterval(timer);
+        return;
+      }
+      const s = Math.floor(diff / 1000);
+      const days = Math.floor(s / 86400);
+      const hours = Math.floor((s % 86400) / 3600);
+      const mins = Math.floor((s % 3600) / 60);
+      const secs = s % 60;
+      if (elDays) elDays.textContent = toAr(days);
+      if (elHours) elHours.textContent = toAr(hours, 2);
+      if (elMins) elMins.textContent = toAr(mins, 2);
+      if (elSecs) elSecs.textContent = toAr(secs, 2);
+    }
+
+    function start() {
+      if (isNaN(target)) { root.style.display = "none"; return; }
+      tick();
+      timer = setInterval(tick, 1000);
+    }
+    return { start };
+  })();
+
   /* ---------- 5. Open / close choreography ---------- */
   const body = document.body;
   const envelope = $("#envelope");
@@ -348,4 +476,5 @@ const WEDDING = {
   /* ---------- init ---------- */
   renderInvitation();
   Particles.start();
+  Countdown.start();
 })();
