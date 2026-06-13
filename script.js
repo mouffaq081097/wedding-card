@@ -405,7 +405,14 @@ const WEDDING = {
         clearInterval(twinkleTimer);
       }
     }
-    return { setEnabled, chimeOpen, isEnabled: () => enabled };
+    // retry playback after a user gesture (when autoplay-on-load was blocked)
+    function resume() {
+      if (enabled && music && music.paused) {
+        const p = music.play(); if (p && p.catch) p.catch(() => {});
+      }
+      if (ctx && ctx.state === "suspended") ctx.resume();
+    }
+    return { setEnabled, chimeOpen, resume, isEnabled: () => enabled };
   })();
 
   /* ---------- 4b. Countdown to the wedding (Sharjah time) ---------- */
@@ -466,12 +473,6 @@ const WEDDING = {
     body.classList.add("is-opening");
     envelope.setAttribute("aria-expanded", "true");
     Particles.burst(reduceMotion ? 0 : 30);
-    // opening is a real user gesture → start the background music (and reflect it
-    // on the speaker button). Guests can mute anytime with that button.
-    if (!Sound.isEnabled()) {
-      soundBtn.setAttribute("aria-pressed", "true");
-      Sound.setEnabled(true);
-    }
     Sound.chimeOpen();
 
     // stage-1 motions (~1.05–1.15s) + a short beat so the fully-risen letter
@@ -525,4 +526,13 @@ const WEDDING = {
   renderInvitation();
   Particles.start();
   Countdown.start();
+
+  // Start the background music on load. Browsers block autoplay-with-sound until
+  // the user interacts, so we attempt it now and, if blocked, resume on the very
+  // first gesture (tap / touch / key). The speaker button can mute it anytime.
+  soundBtn.setAttribute("aria-pressed", "true");
+  Sound.setEnabled(true);
+  const kickMusic = () => { Sound.resume(); };
+  ["pointerdown", "touchstart", "keydown"].forEach((ev) =>
+    addEventListener(ev, kickMusic, { once: true, passive: true }));
 })();
