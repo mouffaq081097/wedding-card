@@ -609,10 +609,10 @@ body.is-open .invitation__sheet{
   position:relative; z-index:2; text-align:center; color:var(--ink);
   /* clear the floral border: top/bottom swags + the side strip
      (horizontal padding is a % of the sheet so it scales with the florals) */
-  padding-top:clamp(80px,22vw,160px);
-  padding-bottom:clamp(60px,16vw,120px);
-  padding-left:14%;
-  padding-right:14%;
+  padding-top:clamp(90px,24vw,170px);
+  padding-bottom:clamp(120px,30vw,190px);
+  padding-left:16%;
+  padding-right:16%;
   /* green palette — overrides the gold/ink tokens for everything inside the
      invitation, so all the formerly-gold text reads green */
   --gold-0:#2e6b43;   /* primary green (labels, bismillah, foot) */
