@@ -344,9 +344,11 @@ const WEDDING = {
     return { start, stop, burst };
   })();
 
-  /* ---------- 4. Sound (synthesised — no audio files) ---------- */
+  /* ---------- 4. Sound (synth chime + looping background music) ---------- */
   const Sound = (() => {
     let ctx = null, master = null, enabled = false, twinkleTimer = 0;
+    const music = $("#bgMusic");
+    if (music) music.volume = 0.4; // soft, sits behind the experience
     function ensure() {
       if (ctx) return;
       const AC = window.AudioContext || window.webkitAudioContext;
@@ -384,6 +386,11 @@ const WEDDING = {
     }
     function setEnabled(on) {
       enabled = on;
+      // background music — handled even if Web Audio isn't available
+      if (music) {
+        if (on) { const p = music.play(); if (p && p.catch) p.catch(() => {}); }
+        else { music.pause(); }
+      }
       ensure();
       if (!ctx) return;
       if (on) {
@@ -459,6 +466,12 @@ const WEDDING = {
     body.classList.add("is-opening");
     envelope.setAttribute("aria-expanded", "true");
     Particles.burst(reduceMotion ? 0 : 30);
+    // opening is a real user gesture → start the background music (and reflect it
+    // on the speaker button). Guests can mute anytime with that button.
+    if (!Sound.isEnabled()) {
+      soundBtn.setAttribute("aria-pressed", "true");
+      Sound.setEnabled(true);
+    }
     Sound.chimeOpen();
 
     // stage-1 motions (~1.05–1.15s) + a short beat so the fully-risen letter

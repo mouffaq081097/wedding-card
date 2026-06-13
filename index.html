@@ -175,7 +175,7 @@
 <!-- TOP-RIGHT CONTROLS                                             -->
 <!-- ============================================================= -->
 <div class="controls">
-  <button id="soundToggle" class="ctrl-btn" type="button" aria-pressed="false" title="تشغيل/إيقاف الصوت" aria-label="تشغيل/إيقاف الصوت">
+  <button id="soundToggle" class="ctrl-btn" type="button" aria-pressed="false" title="تشغيل/إيقاف الموسيقى" aria-label="تشغيل/إيقاف الموسيقى">
     <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
       <path class="ic-base" d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/>
       <path class="ic-wave" d="M16 8.5a5 5 0 010 7M18.5 6a8.5 8.5 0 010 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
@@ -316,6 +316,9 @@
 <!-- subtle film grain over everything -->
 <div class="film-grain" aria-hidden="true"></div>
 
-<script src="script.js?v=12"></script>
+<!-- looping background music (controlled by the speaker button / on open) -->
+<audio id="bgMusic" src="background-music.mp3" loop preload="auto" aria-hidden="true"></audio>
+
+<script src="script.js?v=13"></script>
 </body>
 </html>
