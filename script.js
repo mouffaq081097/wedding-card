@@ -509,6 +509,7 @@ const WEDDING = {
   function i_reset() { i = 0; renderInvitation(); }
 
   envelope.addEventListener("click", open);
+  $("#hint").addEventListener("click", open); // the cue itself opens too
   $("#replay").addEventListener("click", reseal);
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && state === "open") reseal();

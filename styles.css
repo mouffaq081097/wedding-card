@@ -495,14 +495,28 @@ body.is-opening .wax-seal{
 
 .hint{
   position:absolute; left:50%; bottom:-22%; transform:translateX(-50%);
-  display:flex; flex-direction:column; align-items:center; gap:2px;
-  color:var(--gold-2); text-align:center; pointer-events:none;
-  transition:opacity .5s;
+  display:flex; flex-direction:column; align-items:center; gap:7px;
+  text-align:center; cursor:pointer;
+  transition:opacity .5s, transform .35s var(--ease-soft);
 }
+.hint:hover{transform:translateX(-50%) translateY(-2px);}
 .hint__en{font-family:"Cinzel",serif; letter-spacing:.28em; font-size:12px; text-transform:uppercase;}
-.hint__ar{font-family:"Aref Ruqaa",serif; font-size:17px; color:var(--gold-3);}
-.hint__chevron{color:var(--gold-2); animation:chevBob 1.8s ease-in-out infinite;}
-@keyframes chevBob{0%,100%{transform:translateY(0);opacity:.6}50%{transform:translateY(6px);opacity:1}}
+/* readable frosted pill on the light marble, matching the countdown card */
+.hint__ar{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:"Aref Ruqaa",serif; font-weight:700;
+  font-size:clamp(15px,4vw,18px); line-height:1; color:#23402e;
+  background:linear-gradient(180deg, rgba(255,253,247,.84), rgba(248,243,231,.74));
+  border:1px solid rgba(176,121,31,.32);
+  border-radius:999px; padding:9px 20px;
+  box-shadow:0 12px 30px rgba(74,58,24,.18), inset 0 1px 0 rgba(255,255,255,.7);
+  backdrop-filter:blur(8px) saturate(1.05); -webkit-backdrop-filter:blur(8px) saturate(1.05);
+}
+.hint__tap{color:#a87f2a; flex:0 0 auto; margin-bottom:1px;}
+.hint__chevron{color:#a87f2a; animation:chevBob 1.9s ease-in-out infinite;}
+@keyframes chevBob{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(-6px);opacity:1}}
+/* drop the cue out cleanly once opening begins */
+body.is-opening .hint{opacity:0; pointer-events:none;}
 
 /* ---------- 9. Open / reveal state ---------- */
 /* Stage 1: opening — flap lifts, letter rises (envelope stays straight-on) */
@@ -521,7 +535,6 @@ body.is-opening .letter{
   transform:translate(-50%,-50%) translateZ(29px) translateY(-33%) scale(1.04);
   box-shadow:0 -8px 20px rgba(3,6,16,.34), inset 0 0 0 1px rgba(201,162,77,.45);
 }
-body.is-opening .hint{opacity:0;}
 body.is-opening .envelope__shadow{opacity:.4;}
 
 /* Stage 2: open — fade the scene back, reveal full invitation */
@@ -856,64 +869,78 @@ body.is-open .replay{display:inline-flex; animation:fadeUp .6s ease 1s both;}
 /* ============================================================= */
 .countdown{
   position:fixed;
-  top:max(14px,env(safe-area-inset-top));
+  top:max(16px,env(safe-area-inset-top));
   left:50%; transform:translateX(-50%);
   z-index:49;
-  display:flex; flex-direction:column; align-items:center; gap:4px;
-  padding:9px 18px 8px;
-  border-radius:16px;
-  background:rgba(10,18,48,.5);
-  border:1px solid rgba(201,162,77,.35);
-  backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
-  box-shadow:0 8px 26px rgba(4,6,15,.4);
+  display:flex; flex-direction:column; align-items:center; gap:7px;
+  padding:11px 22px 10px;
+  border-radius:18px;
+  /* warm frosted-cream card to sit gracefully on the light marble */
+  background:linear-gradient(180deg, rgba(255,253,247,.82), rgba(248,243,231,.72));
+  border:1px solid rgba(176,121,31,.30);
+  backdrop-filter:blur(10px) saturate(1.1); -webkit-backdrop-filter:blur(10px) saturate(1.1);
+  box-shadow:0 14px 34px rgba(74,58,24,.16), inset 0 1px 0 rgba(255,255,255,.7);
   text-align:center; pointer-events:none;
   transition:opacity .5s var(--ease-soft), transform .5s var(--ease-soft);
   animation:cdIntro .9s var(--ease-luxe) both;
 }
 @keyframes cdIntro{from{opacity:0; transform:translateX(-50%) translateY(-14px);}to{opacity:1; transform:translateX(-50%) translateY(0);}}
 
+/* title with thin gold hairlines flanking it */
 .countdown__title{
+  display:flex; align-items:center; justify-content:center; gap:9px;
   font-family:"Reem Kufi",sans-serif; direction:rtl;
-  font-size:11px; letter-spacing:.04em;
-  color:var(--gold-2);
+  font-size:10.5px; letter-spacing:.06em; font-weight:500;
+  color:#8a6a2c;
+}
+.countdown__title::before,
+.countdown__title::after{
+  content:""; width:22px; height:1px; flex:0 0 auto;
+  background:linear-gradient(to right, rgba(176,121,31,0), rgba(176,121,31,.7), rgba(176,121,31,0));
 }
 .countdown__row{
-  display:flex; align-items:flex-start; justify-content:center;
-  gap:6px; direction:ltr;
+  display:flex; align-items:stretch; justify-content:center;
+  gap:4px; direction:ltr;
 }
 .countdown__unit{
   display:flex; flex-direction:column; align-items:center;
-  min-width:34px; gap:1px;
+  min-width:40px; gap:3px; padding:0 4px;
 }
 .countdown__unit b{
-  font-family:"Cinzel",serif; font-weight:600;
-  font-size:clamp(18px,5vw,22px); line-height:1;
-  color:var(--gold-3);
+  font-family:"Reem Kufi",sans-serif; font-weight:600;
+  font-size:clamp(20px,5.4vw,25px); line-height:1;
+  color:#23402e; /* deep green — strong contrast on cream */
   font-variant-numeric:tabular-nums; font-feature-settings:"tnum";
 }
 .countdown__unit i{
   font-family:"Reem Kufi",sans-serif; font-style:normal; direction:rtl;
-  font-size:9px; letter-spacing:.02em;
-  color:var(--gold-2); opacity:.85;
+  font-size:9px; letter-spacing:.02em; font-weight:400;
+  color:#6f9e80; /* sage */
 }
 .countdown__sep{
-  font-family:"Cinzel",serif; font-size:clamp(15px,4vw,19px); line-height:1;
-  color:var(--gold-1); opacity:.6; margin-top:1px;
+  align-self:flex-start;
+  font-family:"Reem Kufi",sans-serif; font-weight:400;
+  font-size:clamp(16px,4.2vw,20px); line-height:1;
+  color:rgba(176,121,31,.5); margin-top:3px;
 }
 /* celebratory state once the day arrives */
+.countdown.is-day{padding:12px 26px;}
 .countdown.is-day .countdown__row{display:none;}
+.countdown.is-day .countdown__title{gap:10px;}
+.countdown.is-day .countdown__title::before,
+.countdown.is-day .countdown__title::after{width:16px;}
 .countdown.is-day .countdown__title{
   font-family:"Aref Ruqaa",serif; font-size:clamp(15px,4.4vw,18px);
-  color:var(--gold-3); padding:2px 4px;
+  color:#2e6b43; font-weight:700; letter-spacing:0;
 }
 /* hide the moment the envelope starts opening — closed-only, mirrors .hint */
 body.is-opening .countdown,
 body.is-open .countdown{opacity:0; pointer-events:none; transform:translateX(-50%) translateY(-14px);}
 
 @media (max-width:540px){
-  .countdown{padding:8px 14px 7px; gap:3px; border-radius:14px;}
-  .countdown__unit{min-width:30px;}
-  .countdown__row{gap:4px;}
+  .countdown{padding:9px 16px 8px; gap:5px; border-radius:15px;}
+  .countdown__unit{min-width:34px; padding:0 2px;}
+  .countdown__row{gap:2px;}
 }
 @media (prefers-reduced-motion:reduce){
   .countdown{animation:none;}
