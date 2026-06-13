@@ -56,7 +56,7 @@
 html,body{height:100%;}
 /* clip the decorative corner bouquets that bleed a few px past the edges so they
    don't create horizontal overflow (which, in this RTL page, shifts the view sideways) */
-html{overflow-x:clip; background:#e5e4e0;}
+html{overflow-x:clip; background:#e5e4e0; overscroll-behavior:none;}
 body{
   margin:0;
   min-height:100svh;
@@ -65,6 +65,8 @@ body{
   color:var(--ivory);
   font-family:"Cormorant Garamond",Georgia,serif;
   overflow:hidden;
+  /* keep the fixed background from rubber-banding/scrolling on touch devices */
+  overscroll-behavior:none;
   -webkit-font-smoothing:antialiased;
   text-rendering:optimizeLegibility;
   position:relative;
@@ -213,17 +215,17 @@ body.is-reading{overflow:hidden;}
   filter:drop-shadow(5px 0 7px rgba(18,18,26,.38));
 }
 
-/* rose & lavender sprig next to the plate */
+/* rose & lavender sprig — pinned to the bottom corners of the stage */
 .side-bouquet{
-  position:absolute; left:74%; bottom:-2%;
-  width:calc(var(--env-w) * 0.46); height:auto;
-  transform:translateX(-10%) rotate(8deg); pointer-events:none;
+  position:absolute; right:-4%; left:auto; bottom:2%;
+  width:calc(var(--env-w) * 0.50); height:auto;
+  transform:rotate(10deg); pointer-events:none;
   filter:drop-shadow(0 8px 8px rgba(3,6,16,.20));
 }
-/* flipped twin on the left side, mirror of the right */
+/* flipped twin on the left side */
 .side-bouquet--left{
-  left:26%;
-  transform:translateX(-90%) rotate(8deg) scaleX(-1);
+  right:auto; left:-4%;
+  transform:rotate(10deg) scaleX(-1);
 }
 
 
@@ -492,15 +494,43 @@ body.is-opening .wax-seal{
 .letter__pull{margin-top:auto; margin-bottom:18%; font-style:italic; font-size:12px; color:var(--ink-soft); letter-spacing:.18em; text-transform:uppercase; opacity:.7;}
 
 .hint{
-  position:absolute; left:50%; bottom:-22%; transform:translateX(-50%);
-  display:flex; flex-direction:column; align-items:center; gap:2px;
-  color:var(--gold-2); text-align:center; pointer-events:none;
-  transition:opacity .5s;
+  position:absolute; left:50%; bottom:-30%;
+  transform:translateX(-50%);
+  display:flex; flex-direction:column; align-items:center; gap:5px;
+  text-align:center; cursor:pointer;
+  pointer-events:auto;
+  transition:opacity .5s, transform .35s var(--ease-soft);
 }
-.hint__en{font-family:"Cinzel",serif; letter-spacing:.28em; font-size:12px; text-transform:uppercase;}
-.hint__ar{font-family:"Aref Ruqaa",serif; font-size:17px; color:var(--gold-3);}
-.hint__chevron{color:var(--gold-2); animation:chevBob 1.8s ease-in-out infinite;}
-@keyframes chevBob{0%,100%{transform:translateY(0);opacity:.6}50%{transform:translateY(6px);opacity:1}}
+.hint:hover{transform:translateX(-50%) translateY(-3px);}
+/* the text label */
+.hint__label{
+  font-family:"Aref Ruqaa",serif; font-weight:700; direction:rtl;
+  font-size:clamp(13px,3.6vw,16px); line-height:1;
+  color:#4a3412;
+  background:linear-gradient(180deg, rgba(255,253,247,.92), rgba(248,243,231,.82));
+  border:1px solid rgba(176,121,31,.38);
+  border-radius:999px; padding:9px 22px;
+  box-shadow:0 6px 20px rgba(74,58,24,.14), inset 0 1px 0 rgba(255,255,255,.8);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  white-space:nowrap;
+  animation:hintGlow 3s ease-in-out infinite;
+}
+@keyframes hintGlow{
+  0%,100%{box-shadow:0 6px 20px rgba(74,58,24,.14), inset 0 1px 0 rgba(255,255,255,.8);}
+  50%{box-shadow:0 8px 24px rgba(74,58,24,.20), inset 0 1px 0 rgba(255,255,255,.9), 0 0 0 5px rgba(168,127,42,.08);}
+}
+/* bouncing chevron below the label */
+.hint__arrow{
+  color:#a87f2a; opacity:.75;
+  animation:arrowBounce 1.8s ease-in-out infinite;
+  line-height:1; display:flex;
+}
+@keyframes arrowBounce{
+  0%,100%{transform:translateY(0); opacity:.5;}
+  50%{transform:translateY(-5px); opacity:1;}
+}
+/* drop the cue out cleanly once opening begins */
+body.is-opening .hint{opacity:0; pointer-events:none;}
 
 /* ---------- 9. Open / reveal state ---------- */
 /* Stage 1: opening — flap lifts, letter rises (envelope stays straight-on) */
@@ -519,7 +549,6 @@ body.is-opening .letter{
   transform:translate(-50%,-50%) translateZ(29px) translateY(-33%) scale(1.04);
   box-shadow:0 -8px 20px rgba(3,6,16,.34), inset 0 0 0 1px rgba(201,162,77,.45);
 }
-body.is-opening .hint{opacity:0;}
 body.is-opening .envelope__shadow{opacity:.4;}
 
 /* Stage 2: open — fade the scene back, reveal full invitation */
@@ -544,6 +573,8 @@ body.is-open .invitation__sheet{
   opacity:0; visibility:hidden;
   transition:opacity .7s ease, visibility .7s;
   overflow:auto;
+  /* contain the scroll so it never chains to (and drags) the fixed background */
+  overscroll-behavior:contain;
   -webkit-overflow-scrolling:touch;
 }
 .invitation__sheet{
@@ -557,7 +588,7 @@ body.is-open .invitation__sheet{
   transform:translateY(40px) scale(.96) rotateX(8deg);
   opacity:0;
   transition:transform 1s var(--ease-luxe) .25s, opacity .9s ease .25s;
-  overflow:hidden;
+  overflow:hidden; /* hard clip — prevents any content from bleeding past the floral border */
 }
 /* floral swags pinned to the top and bottom edges of the sheet */
 .sheet-floral{
@@ -578,10 +609,10 @@ body.is-open .invitation__sheet{
   position:relative; z-index:2; text-align:center; color:var(--ink);
   /* clear the floral border: top/bottom swags + the side strip
      (horizontal padding is a % of the sheet so it scales with the florals) */
-  padding-top:clamp(80px,22vw,160px);
-  padding-bottom:clamp(60px,16vw,120px);
-  padding-left:14%;
-  padding-right:14%;
+  padding-top:clamp(90px,24vw,170px);
+  padding-bottom:clamp(120px,30vw,190px);
+  padding-left:16%;
+  padding-right:16%;
   /* green palette — overrides the gold/ink tokens for everything inside the
      invitation, so all the formerly-gold text reads green */
   --gold-0:#2e6b43;   /* primary green (labels, bismillah, foot) */
@@ -670,9 +701,28 @@ body.is-open .invitation__sheet{
 .inv-time{font-family:"Cormorant Garamond",serif; font-size:clamp(15px,3.8vw,19px); color:var(--ink-soft); margin-top:4px;}
 .inv-time .ar{font-family:"Aref Ruqaa",serif; direction:rtl;}
 
-/* date + time / venue + address merged on a single line */
-.inv-date--inline .ar,
-.inv-venue--inline .ar{display:block; white-space:nowrap; font-size:clamp(13px,3.7vw,20px);}
+/* date + time / venue + address — stacked, each line wraps within the
+   floral-bordered column so long Arabic sentences never spill past the border */
+.inv-date--stack,
+.inv-venue--stack{display:flex; flex-direction:column; align-items:center; gap:3px;}
+.inv-line{
+  display:block; max-width:100%;
+  white-space:normal; overflow-wrap:anywhere; word-break:break-word; text-wrap:balance;
+  line-height:1.45;
+}
+.inv-line--lead{
+  font-family:"Aref Ruqaa",serif; direction:rtl;
+  font-size:clamp(15px,4.2vw,21px); color:var(--ink); font-weight:400;
+}
+.inv-line--sub{
+  font-family:"Aref Ruqaa",serif; direction:rtl;
+  font-size:clamp(13px,3.5vw,17px); color:var(--ink-soft);
+}
+/* English address keeps its serif face but still wraps inside the column */
+.inv-venue--stack .inv-line--sub[dir="ltr"]{
+  direction:ltr;
+  font-family:"Cormorant Garamond",serif; font-style:italic; letter-spacing:.01em;
+}
 .inv-dt-sep{color:var(--gold-1); margin:0 .3em; font-weight:400;}
 
 .inv-venue{font-family:"Cormorant Garamond",serif; font-size:clamp(15px,3.8vw,20px); font-weight:600; color:var(--ink);}
@@ -718,7 +768,7 @@ body.is-open .invitation__sheet{
 }
 .inv-btn svg{width:15px;height:15px;}
 
-.inv-rsvp-note{font-family:"Cormorant Garamond",serif; font-style:italic; font-size:clamp(13px,3.4vw,16px); color:var(--ink-soft); margin-top:10px;}
+.inv-rsvp-note{font-family:"Cormorant Garamond",serif; font-style:italic; font-size:clamp(13px,3.4vw,16px); color:var(--ink-soft); margin-top:10px; overflow-wrap:anywhere; word-break:break-word;}
 .inv-rsvp-note .ar{font-family:"Aref Ruqaa",serif; direction:rtl; font-style:normal;}
 
 .inv-foot{margin-top:22px; font-family:"Aref Ruqaa",serif; color:var(--gold-0); font-size:clamp(14px,3.6vw,18px); direction:rtl;}
@@ -827,3 +877,155 @@ body.is-open .replay{display:inline-flex; animation:fadeUp .6s ease 1s both;}
 }
 .inv-schedule li::before{left:auto; right:-6px;}
 .inv-schedule .t{font-family:"Reem Kufi",sans-serif; letter-spacing:0;}
+
+/* ============================================================= */
+/* COUNTDOWN — glass pill at top-centre, visible while closed     */
+/* ============================================================= */
+.countdown{
+  position:fixed;
+  top:max(16px,env(safe-area-inset-top));
+  left:50%; transform:translateX(-50%);
+  z-index:49;
+  display:flex; flex-direction:column; align-items:center; gap:7px;
+  padding:11px 22px 10px;
+  border-radius:18px;
+  /* warm frosted-cream card to sit gracefully on the light marble */
+  background:linear-gradient(180deg, rgba(255,253,247,.82), rgba(248,243,231,.72));
+  border:1px solid rgba(176,121,31,.30);
+  backdrop-filter:blur(10px) saturate(1.1); -webkit-backdrop-filter:blur(10px) saturate(1.1);
+  box-shadow:0 14px 34px rgba(74,58,24,.16), inset 0 1px 0 rgba(255,255,255,.7);
+  text-align:center; pointer-events:none;
+  transition:opacity .5s var(--ease-soft), transform .5s var(--ease-soft);
+  animation:cdIntro .9s var(--ease-luxe) both;
+}
+@keyframes cdIntro{from{opacity:0; transform:translateX(-50%) translateY(-14px);}to{opacity:1; transform:translateX(-50%) translateY(0);}}
+
+/* title with thin gold hairlines flanking it */
+.countdown__title{
+  display:flex; align-items:center; justify-content:center; gap:9px;
+  font-family:"Reem Kufi",sans-serif; direction:rtl;
+  font-size:10.5px; letter-spacing:.06em; font-weight:500;
+  color:#8a6a2c;
+}
+.countdown__title::before,
+.countdown__title::after{
+  content:""; width:22px; height:1px; flex:0 0 auto;
+  background:linear-gradient(to right, rgba(176,121,31,0), rgba(176,121,31,.7), rgba(176,121,31,0));
+}
+.countdown__row{
+  display:flex; align-items:stretch; justify-content:center;
+  gap:4px; direction:ltr;
+}
+.countdown__unit{
+  display:flex; flex-direction:column; align-items:center;
+  min-width:40px; gap:3px; padding:0 4px;
+}
+.countdown__unit b{
+  font-family:"Reem Kufi",sans-serif; font-weight:600;
+  font-size:clamp(20px,5.4vw,25px); line-height:1;
+  color:#23402e; /* deep green — strong contrast on cream */
+  font-variant-numeric:tabular-nums; font-feature-settings:"tnum";
+}
+.countdown__unit i{
+  font-family:"Reem Kufi",sans-serif; font-style:normal; direction:rtl;
+  font-size:9px; letter-spacing:.02em; font-weight:400;
+  color:#6f9e80; /* sage */
+}
+.countdown__sep{
+  align-self:flex-start;
+  font-family:"Reem Kufi",sans-serif; font-weight:400;
+  font-size:clamp(16px,4.2vw,20px); line-height:1;
+  color:rgba(176,121,31,.5); margin-top:3px;
+}
+/* celebratory state once the day arrives */
+.countdown.is-day{padding:12px 26px;}
+.countdown.is-day .countdown__row{display:none;}
+.countdown.is-day .countdown__title{gap:10px;}
+.countdown.is-day .countdown__title::before,
+.countdown.is-day .countdown__title::after{width:16px;}
+.countdown.is-day .countdown__title{
+  font-family:"Aref Ruqaa",serif; font-size:clamp(15px,4.4vw,18px);
+  color:#2e6b43; font-weight:700; letter-spacing:0;
+}
+/* hide the moment the envelope starts opening — closed-only, mirrors .hint */
+body.is-opening .countdown,
+body.is-open .countdown{opacity:0; pointer-events:none; transform:translateX(-50%) translateY(-14px);}
+
+@media (max-width:540px){
+  .countdown{padding:9px 16px 8px; gap:5px; border-radius:15px;}
+  .countdown__unit{min-width:34px; padding:0 2px;}
+  .countdown__row{gap:2px;}
+}
+@media (prefers-reduced-motion:reduce){
+  .countdown{animation:none;}
+}
+
+/* ============================================================= */
+/* RSVP FORM — inside the invitation (green palette is active)    */
+/* ============================================================= */
+.rsvp-form{
+  display:flex; flex-direction:column; align-items:stretch;
+  gap:12px; max-width:360px; margin:6px auto 0;
+  text-align:right;
+}
+.rsvp-field{display:flex; flex-direction:column; gap:5px;}
+
+/* progressive disclosure: the [hidden] attribute must beat the flex rules above */
+.rsvp-form[hidden],
+.rsvp-field[hidden],
+#rsvpTriggerWrap[hidden]{display:none;}
+/* gentle reveal when each step appears */
+@keyframes rsvpReveal{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+.rsvp-form:not([hidden]){animation:rsvpReveal .5s var(--ease-luxe);}
+.rsvp-field--companions:not([hidden]){animation:rsvpReveal .4s var(--ease-luxe);}
+@media (prefers-reduced-motion:reduce){
+  .rsvp-form:not([hidden]),
+  .rsvp-field--companions:not([hidden]){animation:none;}
+}
+.rsvp-label{
+  font-family:"Reem Kufi",sans-serif; direction:rtl; text-align:right;
+  font-size:clamp(11px,3vw,13px); color:var(--gold-0);
+}
+.rsvp-input{
+  width:100%; box-sizing:border-box;
+  font-family:"Aref Ruqaa",serif; direction:rtl; text-align:right;
+  font-size:clamp(14px,3.6vw,16px); color:var(--ink);
+  background:#ffffff;
+  border:1px solid var(--gold-1); border-radius:2px;
+  padding:11px 14px;
+  transition:border-color .3s var(--ease-soft), box-shadow .3s var(--ease-soft);
+}
+.rsvp-input::placeholder{color:var(--ink-soft); opacity:.6;}
+.rsvp-input:focus{
+  outline:none; border-color:var(--gold-0);
+  box-shadow:0 0 0 2px rgba(63,133,87,.12);
+}
+.rsvp-input.is-invalid{border-color:#b4543c; box-shadow:0 0 0 2px rgba(180,84,60,.12);}
+.rsvp-textarea{resize:vertical; min-height:48px; line-height:1.5;}
+/* number field reads LTR digits but stays right-aligned */
+input.rsvp-input[type="number"]{direction:ltr; text-align:right; font-family:"Reem Kufi",sans-serif;}
+
+.rsvp-form .inv-actions{margin-top:4px;}
+.rsvp-btn[disabled]{opacity:.55; cursor:default; pointer-events:none;}
+
+.rsvp-status{
+  font-family:"Aref Ruqaa",serif; direction:rtl; text-align:center;
+  font-size:clamp(13px,3.4vw,15px); margin:2px 0 0;
+  min-height:1.2em; opacity:0; transition:opacity .3s var(--ease-soft);
+}
+.rsvp-status.is-shown{opacity:1;}
+.rsvp-status.is-ok{color:var(--gold-0);}
+.rsvp-status.is-err{color:#b4543c;}
+.rsvp-status.is-pending{color:var(--ink-soft);}
+
+/* children / no-kids notice */
+.inv-notice{
+  font-family:"Aref Ruqaa",serif; direction:rtl; text-align:center;
+  font-size:clamp(13px,3.4vw,16px); color:var(--ink);
+  margin:18px 0 0; padding:10px 16px;
+  border:1px solid rgba(46,107,67,.28);
+  border-radius:4px;
+  background:rgba(46,107,67,.05);
+  width:100%; box-sizing:border-box;
+  overflow-wrap:anywhere; word-break:break-word;
+}

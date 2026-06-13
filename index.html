@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa:wght@400;700&family=Cinzel:wght@400;500;600;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&family=Italianno&family=Mirza:wght@400;500;600&family=Reem+Kufi:wght@400;500;700&display=swap" rel="stylesheet" />
 
-<link rel="stylesheet" href="styles.css?v=12" />
+<link rel="stylesheet" href="styles.css?v=23" />
 </head>
 <body>
 
@@ -175,12 +175,28 @@
 <!-- TOP-RIGHT CONTROLS                                             -->
 <!-- ============================================================= -->
 <div class="controls">
-  <button id="soundToggle" class="ctrl-btn" type="button" aria-pressed="false" title="تشغيل/إيقاف الصوت" aria-label="تشغيل/إيقاف الصوت">
+  <button id="soundToggle" class="ctrl-btn" type="button" aria-pressed="false" title="تشغيل/إيقاف الموسيقى" aria-label="تشغيل/إيقاف الموسيقى">
     <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
       <path class="ic-base" d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/>
       <path class="ic-wave" d="M16 8.5a5 5 0 010 7M18.5 6a8.5 8.5 0 010 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
     </svg>
   </button>
+</div>
+
+<!-- ============================================================= -->
+<!-- COUNTDOWN — shown at the top only while the envelope is closed -->
+<!-- ============================================================= -->
+<div class="countdown" id="countdown" dir="rtl" lang="ar" aria-label="العد التنازلي ليوم الزفاف">
+  <span class="countdown__title">على بُعد</span>
+  <div class="countdown__row" id="countdownRow">
+    <span class="countdown__unit"><b id="cdDays">٠</b><i>يوم</i></span>
+    <span class="countdown__sep" aria-hidden="true">:</span>
+    <span class="countdown__unit"><b id="cdHours">٠٠</b><i>ساعة</i></span>
+    <span class="countdown__sep" aria-hidden="true">:</span>
+    <span class="countdown__unit"><b id="cdMins">٠٠</b><i>دقيقة</i></span>
+    <span class="countdown__sep" aria-hidden="true">:</span>
+    <span class="countdown__unit"><b id="cdSecs">٠٠</b><i>ثانية</i></span>
+  </div>
 </div>
 
 <!-- ============================================================= -->
@@ -251,17 +267,18 @@
       <span class="env-addr" dir="rtl" lang="ar" aria-hidden="true">
         <span class="env-addr__script">يَسعَدُنا دَعوَتُكُم لِحُضورِ حَفلِ زَفاف</span>
         <span class="env-addr__names">أُسَيْمَة و مُوَفَّق</span>
-        <span class="env-addr__date">١١ . ١١ . ٢٠٢٣</span>
+        <span class="env-addr__date">١١ . ٧ . ٢٠٢٦</span>
       </span>
 
       <!-- wax seal sealing the flap to the pocket -->
       <img class="wax-seal" id="waxSeal" src="image-from-rawpixel-id-13273648-png.png" alt="" aria-hidden="true" />
     </button>
 
-    <!-- "tap to open" hint -->
-    <div class="hint" id="hint">
-      <span class="hint__chevron" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="22" height="22"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <!-- "tap to open" hint (also clickable to open) -->
+    <div class="hint" id="hint" role="button" tabindex="-1" aria-hidden="true">
+      <span class="hint__label" dir="rtl" lang="ar">اضغط لِفَتحِ الدَّعوة</span>
+      <span class="hint__arrow" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </span>
     </div>
   </section>
@@ -300,6 +317,9 @@
 <!-- subtle film grain over everything -->
 <div class="film-grain" aria-hidden="true"></div>
 
-<script src="script.js?v=12"></script>
+<!-- looping background music (controlled by the speaker button / on open) -->
+<audio id="bgMusic" src="background-music.mp3?v=2" loop preload="auto" aria-hidden="true"></audio>
+
+<script src="script.js?v=17"></script>
 </body>
 </html>
