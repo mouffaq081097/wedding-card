@@ -972,3 +972,53 @@ input.rsvp-input[type="number"]{direction:ltr; text-align:right; font-family:"Re
 .rsvp-status.is-ok{color:var(--gold-0);}
 .rsvp-status.is-err{color:#b4543c;}
 .rsvp-status.is-pending{color:var(--ink-soft);}
+
+/* ============================================================= */
+/* PRELOADER — gold monogram on the night, fades out when ready  */
+/* ============================================================= */
+.preloader{
+  position:fixed; inset:0; z-index:200;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;
+  background:
+    radial-gradient(120% 90% at 50% 30%, rgba(29,49,104,.55), rgba(0,0,0,0) 60%),
+    linear-gradient(180deg, var(--night-1) 0%, var(--night-0) 100%);
+  transition:opacity .7s var(--ease-soft), visibility .7s var(--ease-soft);
+}
+.preloader.is-hidden{opacity:0; visibility:hidden; pointer-events:none;}
+
+.preloader__mark{
+  position:relative; width:96px; height:96px;
+  display:grid; place-items:center;
+}
+.preloader__ring{
+  position:absolute; inset:0;
+  border-radius:50%;
+  border:2px solid rgba(201,162,77,.18);
+  border-top-color:var(--gold-2);
+  border-right-color:var(--gold-1);
+  animation:preSpin 1.05s linear infinite;
+}
+.preloader__ring::after{
+  content:""; position:absolute; inset:10px;
+  border-radius:50%;
+  border:1px solid rgba(231,205,132,.12);
+}
+.preloader__mono{
+  font-family:"Aref Ruqaa",serif; font-weight:700;
+  font-size:42px; line-height:1;
+  background:linear-gradient(135deg,#7c5a16,#f7e7a8 45%,#caa345 60%,#f3dd92);
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:transparent;
+  animation:preGlow 1.8s ease-in-out infinite;
+}
+.preloader__text{
+  font-family:"Reem Kufi",sans-serif; direction:rtl;
+  font-size:13px; letter-spacing:.02em; color:var(--gold-2); opacity:.85;
+}
+@keyframes preSpin{to{transform:rotate(360deg);}}
+@keyframes preGlow{0%,100%{opacity:.85; transform:scale(1);}50%{opacity:1; transform:scale(1.06);}}
+
+@media (prefers-reduced-motion:reduce){
+  .preloader__ring{animation-duration:2.2s;}
+  .preloader__mono{animation:none;}
+}
