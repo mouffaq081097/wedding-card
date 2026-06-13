@@ -25,7 +25,7 @@ const WEDDING = {
 
   /* --- الموعد --- */
   date: { ar: "السَّبتُ ١١ يوليو ٢٠٢٦م" },
-  time: { ar: "تَبدَأُ مَراسِمُ الفَرَحِ في تَمامِ السّاعَةِ السّابِعَةِ مَساءً" },
+  time: { ar: "تَبدَأُ مَراسِمُ الفَرَحِ في تَمامِ السّاعَةِ الثّامِنَةِ مَساءً" },
 
   /* --- المكان --- */
   venue: {
@@ -45,15 +45,18 @@ const WEDDING = {
   /* --- الزيّ --- */ // « عدّل »
   dress: { ar: "ملابس رسمية" },
 
+  /* --- ملاحظة الأطفال --- */
+  childrenNote: { ar: "الحَفلُ مُخَصَّصٌ لِلبالِغينَ فقط — لا يُسمَحُ بِإِحضارِ الأطفال" },
+
   /* --- تأكيد الحضور --- */
   rsvp: {
     // رابط Google Apps Script Web App (/exec) — يرسل بريداً ويسجّل في Google Sheet خاصة
     endpoint: "https://script.google.com/macros/s/AKfycbwbzTwuyjWcEKRGiJhn7CYoSUS8IB1I3ECWnLHh1QNpZYQE01sw2gAhuykMM0HzPJWF/exec",
-    noteAr: "يُرجى التَّكَرُّمُ بِتَأكيدِ قَبولِ الدَّعوَةِ بِإِدخالِ اسمِكُم وأسماءِ مُرافِقيكُم",
+    noteAr: "يُرجى التَّكَرُّمُ بِتَأكيدِ قَبولِ الدَّعوَةِ؛ وفي حالِ الاعتِذارِ يُرجى التَّكَرُّمُ بِالإعلامِ قبلَ ١٠ أيّامٍ مِن مَوعِدِ الحَفل",
   },
 
   /* --- موعد الزفاف للعدّ التنازلي (توقيت الشارقة UTC+4) --- */
-  countdownTarget: "2026-07-11T19:00:00+04:00",
+  countdownTarget: "2026-07-11T20:00:00+04:00",
 
   /* --- دعاء الختام --- */
   foot: { ar: "بِحُضورِكُم يَكتَمِلُ فَرَحُنا ومَسَرَّتُنا.. دامَت دِيارُكُم عامِرَةً بِالأَفراحِ، مَعَ التَّأكيدِ على أَنَّ جَنَّةَ الأَطفالِ بُيوتُهُم" },
@@ -167,6 +170,12 @@ const WEDDING = {
          </form>
        </div>`
     ));
+
+    if (W.childrenNote) {
+      parts.push(reveal(
+        `<p class="inv-notice">${esc(W.childrenNote.ar)}</p>`
+      ));
+    }
 
     parts.push(reveal(
       `<div class="inv-foot">${esc(W.foot.ar)}</div>`
@@ -514,6 +523,17 @@ const WEDDING = {
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && state === "open") reseal();
   });
+
+  // Swipe DOWN on the open invitation to reseal (iOS bottom-sheet dismiss pattern)
+  let _swipeY0 = 0;
+  invitation.addEventListener("touchstart", (e) => {
+    _swipeY0 = e.touches[0].clientY;
+  }, { passive: true });
+  invitation.addEventListener("touchend", (e) => {
+    if (state !== "open") return;
+    const dy = e.changedTouches[0].clientY - _swipeY0;
+    if (dy > 90 && invitation.scrollTop === 0) reseal();
+  }, { passive: true });
 
   /* ---------- 6. Sound toggle ---------- */
   const soundBtn = $("#soundToggle");

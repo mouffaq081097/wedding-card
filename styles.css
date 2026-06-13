@@ -527,7 +527,7 @@ body.is-opening .wax-seal{
 }
 @keyframes arrowBounce{
   0%,100%{transform:translateY(0); opacity:.5;}
-  50%{transform:translateY(5px); opacity:1;}
+  50%{transform:translateY(-5px); opacity:1;}
 }
 /* drop the cue out cleanly once opening begins */
 body.is-opening .hint{opacity:0; pointer-events:none;}
@@ -1017,3 +1017,14 @@ input.rsvp-input[type="number"]{direction:ltr; text-align:right; font-family:"Re
 .rsvp-status.is-ok{color:var(--gold-0);}
 .rsvp-status.is-err{color:#b4543c;}
 .rsvp-status.is-pending{color:var(--ink-soft);}
+
+/* children / no-kids notice */
+.inv-notice{
+  font-family:"Aref Ruqaa",serif; direction:rtl; text-align:center;
+  font-size:clamp(13px,3.4vw,16px); color:var(--ink);
+  margin:18px auto 0; padding:10px 16px;
+  border:1px solid rgba(46,107,67,.28);
+  border-radius:4px;
+  background:rgba(46,107,67,.05);
+  max-width:340px;
+}
