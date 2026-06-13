@@ -494,41 +494,41 @@ body.is-opening .wax-seal{
 .letter__pull{margin-top:auto; margin-bottom:18%; font-style:italic; font-size:12px; color:var(--ink-soft); letter-spacing:.18em; text-transform:uppercase; opacity:.7;}
 
 .hint{
-  position:absolute; left:50%; bottom:-24%;
+  position:absolute; left:50%; bottom:-14%;
   transform:translateX(-50%);
-  display:inline-flex; align-items:center;
+  display:flex; flex-direction:column; align-items:center; gap:5px;
   text-align:center; cursor:pointer;
+  pointer-events:auto;
   transition:opacity .5s, transform .35s var(--ease-soft);
 }
 .hint:hover{transform:translateX(-50%) translateY(-3px);}
-.hint:hover .hint__pill{
-  border-color:rgba(176,121,31,.55);
-  box-shadow:0 16px 38px rgba(74,58,24,.22), inset 0 1px 0 rgba(255,255,255,.85);
+/* the text label */
+.hint__label{
+  font-family:"Aref Ruqaa",serif; font-weight:700; direction:rtl;
+  font-size:clamp(13px,3.6vw,16px); line-height:1;
+  color:#4a3412;
+  background:linear-gradient(180deg, rgba(255,253,247,.92), rgba(248,243,231,.82));
+  border:1px solid rgba(176,121,31,.38);
+  border-radius:999px; padding:9px 22px;
+  box-shadow:0 6px 20px rgba(74,58,24,.14), inset 0 1px 0 rgba(255,255,255,.8);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  white-space:nowrap;
+  animation:hintGlow 3s ease-in-out infinite;
 }
-/* single unified frosted pill — everything lives inside */
-.hint__pill{
-  display:inline-flex; align-items:center; gap:10px;
-  font-family:"Aref Ruqaa",serif; font-weight:700;
-  font-size:clamp(15px,4vw,18px); line-height:1; color:#23402e;
-  background:linear-gradient(180deg, rgba(255,253,247,.88), rgba(248,243,231,.78));
-  border:1px solid rgba(176,121,31,.36);
-  border-radius:999px; padding:11px 22px 11px 18px;
-  box-shadow:0 10px 28px rgba(74,58,24,.16), inset 0 1px 0 rgba(255,255,255,.75);
-  backdrop-filter:blur(10px) saturate(1.08); -webkit-backdrop-filter:blur(10px) saturate(1.08);
-  animation:hintPulse 2.8s var(--ease-soft) infinite;
+@keyframes hintGlow{
+  0%,100%{box-shadow:0 6px 20px rgba(74,58,24,.14), inset 0 1px 0 rgba(255,255,255,.8);}
+  50%{box-shadow:0 8px 24px rgba(74,58,24,.20), inset 0 1px 0 rgba(255,255,255,.9), 0 0 0 5px rgba(168,127,42,.08);}
 }
-@keyframes hintPulse{
-  0%,100%{box-shadow:0 10px 28px rgba(74,58,24,.16), inset 0 1px 0 rgba(255,255,255,.75), 0 0 0 0 rgba(168,127,42,0);}
-  50%{box-shadow:0 10px 28px rgba(74,58,24,.22), inset 0 1px 0 rgba(255,255,255,.85), 0 0 0 7px rgba(168,127,42,.10);}
+/* bouncing chevron below the label */
+.hint__arrow{
+  color:#a87f2a; opacity:.75;
+  animation:arrowBounce 1.8s ease-in-out infinite;
+  line-height:1; display:flex;
 }
-.hint__icon{display:flex; align-items:center; color:#a87f2a; flex:0 0 auto;}
-.hint__text{flex:1;}
-.hint__chevron{
-  display:flex; align-items:center; flex:0 0 auto;
-  color:#a87f2a; opacity:.7;
-  animation:chevBob 2.2s ease-in-out infinite;
+@keyframes arrowBounce{
+  0%,100%{transform:translateY(0); opacity:.5;}
+  50%{transform:translateY(5px); opacity:1;}
 }
-@keyframes chevBob{0%,100%{transform:translateY(0); opacity:.55} 50%{transform:translateY(-4px); opacity:.95}}
 /* drop the cue out cleanly once opening begins */
 body.is-opening .hint{opacity:0; pointer-events:none;}
 
