@@ -132,12 +132,19 @@ const WEDDING = {
 
     parts.push(`<div class="inv-divider">${dividerSVG}</div>`);
 
-    // تأكيد الحضور — نموذج يُرسل بريداً ويُسجّل في قائمة خاصة
+    // تأكيد الحضور — يبدأ بزرّ واحد، ثم تظهر الحقول تدريجياً
     parts.push(reveal(
       `<div class="inv-block">
          <div class="inv-label">تَأكيدُ الحُضور</div>
          <p class="inv-rsvp-note"><span class="ar">${esc(W.rsvp.noteAr)}</span></p>
-         <form class="rsvp-form" id="rsvpForm" novalidate>
+
+         <!-- الزرّ الأوّل: يفتح النموذج -->
+         <div class="inv-actions" id="rsvpTriggerWrap">
+           <button class="inv-btn rsvp-btn" type="button" id="rsvpTrigger">أكِّد حُضورَك</button>
+         </div>
+
+         <!-- النموذج يظهر بعد الضغط على الزرّ -->
+         <form class="rsvp-form" id="rsvpForm" novalidate hidden>
            <div class="rsvp-field">
              <label class="rsvp-label" for="rsvpName">الاسمُ الكَريم</label>
              <input class="rsvp-input" id="rsvpName" name="name" type="text" required
@@ -148,13 +155,13 @@ const WEDDING = {
              <input class="rsvp-input" id="rsvpGuests" name="guests" type="number"
                     min="1" max="20" step="1" inputmode="numeric" value="1" />
            </div>
-           <div class="rsvp-field">
-             <label class="rsvp-label" for="rsvpCompanions">أسماءُ المُرافِقين (اختياري)</label>
+           <div class="rsvp-field rsvp-field--companions" id="rsvpCompanionsField" hidden>
+             <label class="rsvp-label" for="rsvpCompanions">أسماءُ المُرافِقين</label>
              <textarea class="rsvp-input rsvp-textarea" id="rsvpCompanions" name="companions"
                        rows="2" placeholder="أسماءُ مَن سيَحضُرون معك"></textarea>
            </div>
            <div class="inv-actions">
-             <button class="inv-btn rsvp-btn" type="submit" id="rsvpSubmit">تَأكيدُ الحُضور</button>
+             <button class="inv-btn rsvp-btn" type="submit" id="rsvpSubmit">إرسالُ التَّأكيد</button>
            </div>
            <p class="rsvp-status" id="rsvpStatus" role="status" aria-live="polite"></p>
          </form>
@@ -178,9 +185,12 @@ const WEDDING = {
   function wireRsvpForm() {
     const form = $("#rsvpForm");
     if (!form) return;
+    const trigger = $("#rsvpTrigger");
+    const triggerWrap = $("#rsvpTriggerWrap");
     const statusEl = $("#rsvpStatus");
     const nameEl = $("#rsvpName");
     const guestsEl = $("#rsvpGuests");
+    const companionsField = $("#rsvpCompanionsField");
     const companionsEl = $("#rsvpCompanions");
     const submitBtn = $("#rsvpSubmit");
 
@@ -189,6 +199,22 @@ const WEDDING = {
       statusEl.className = "rsvp-status is-shown" + (kind ? " is-" + kind : "");
     };
 
+    // 1) الزرّ الأوّل يكشف النموذج (الاسم + عدد الحضور)
+    trigger.addEventListener("click", () => {
+      triggerWrap.hidden = true;
+      form.hidden = false;
+      try { nameEl.focus({ preventScroll: true }); } catch (e) {}
+    });
+
+    // 2) حقل أسماء المرافقين يظهر فقط عند إدخال أكثر من حاضر واحد
+    const syncCompanions = () => {
+      const n = parseInt(guestsEl.value, 10);
+      companionsField.hidden = !(n > 1);
+    };
+    guestsEl.addEventListener("input", syncCompanions);
+    guestsEl.addEventListener("change", syncCompanions);
+
+    // 3) الإرسال
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const name = (nameEl.value || "").trim();
@@ -206,10 +232,12 @@ const WEDDING = {
         return;
       }
 
+      const guests = parseInt(guestsEl.value, 10) || 1;
       const payload = {
         name,
-        guests: (guestsEl.value || "1").trim(),
-        companions: (companionsEl.value || "").trim(),
+        guests: String(guests),
+        // المرافقون يُرسَلون فقط عند وجود أكثر من حاضر واحد
+        companions: guests > 1 ? (companionsEl.value || "").trim() : "",
       };
 
       submitBtn.disabled = true;
@@ -225,6 +253,7 @@ const WEDDING = {
         // مع no-cors تكون الاستجابة معتمة؛ نجاح متفائل (السطر والبريد يُكتبان في الخادم)
         setStatus("تمّ تأكيد حضوركم، شكراً لكم 🤍", "ok");
         form.reset();
+        companionsField.hidden = true;
         Particles.burst(reduceMotion ? 0 : 36);
       } catch (err) {
         setStatus("تعذّر الإرسال، تأكّد من اتصالك وحاول مجدداً", "err");

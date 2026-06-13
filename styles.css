@@ -924,6 +924,19 @@ body.is-open .countdown{opacity:0; pointer-events:none; transform:translateX(-50
   text-align:right;
 }
 .rsvp-field{display:flex; flex-direction:column; gap:5px;}
+
+/* progressive disclosure: the [hidden] attribute must beat the flex rules above */
+.rsvp-form[hidden],
+.rsvp-field[hidden],
+#rsvpTriggerWrap[hidden]{display:none;}
+/* gentle reveal when each step appears */
+@keyframes rsvpReveal{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+.rsvp-form:not([hidden]){animation:rsvpReveal .5s var(--ease-luxe);}
+.rsvp-field--companions:not([hidden]){animation:rsvpReveal .4s var(--ease-luxe);}
+@media (prefers-reduced-motion:reduce){
+  .rsvp-form:not([hidden]),
+  .rsvp-field--companions:not([hidden]){animation:none;}
+}
 .rsvp-label{
   font-family:"Reem Kufi",sans-serif; direction:rtl; text-align:right;
   font-size:clamp(11px,3vw,13px); color:var(--gold-0);
