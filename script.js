@@ -47,8 +47,8 @@ const WEDDING = {
 
   /* --- تأكيد الحضور --- */
   rsvp: {
-    // بعد إعداد Google Apps Script (راجع README) الصق رابط الـ /exec هنا:
-    endpoint: "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE",
+    // رابط Google Apps Script Web App (/exec) — يرسل بريداً ويسجّل في Google Sheet خاصة
+    endpoint: "https://script.google.com/macros/s/AKfycbwbzTwuyjWcEKRGiJhn7CYoSUS8IB1I3ECWnLHh1QNpZYQE01sw2gAhuykMM0HzPJWF/exec",
     noteAr: "يُرجى التَّكَرُّمُ بِتَأكيدِ قَبولِ الدَّعوَةِ بِإِدخالِ اسمِكُم وأسماءِ مُرافِقيكُم",
   },
 
