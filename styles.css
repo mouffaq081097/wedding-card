@@ -670,9 +670,28 @@ body.is-open .invitation__sheet{
 .inv-time{font-family:"Cormorant Garamond",serif; font-size:clamp(15px,3.8vw,19px); color:var(--ink-soft); margin-top:4px;}
 .inv-time .ar{font-family:"Aref Ruqaa",serif; direction:rtl;}
 
-/* date + time / venue + address merged on a single line */
-.inv-date--inline .ar,
-.inv-venue--inline .ar{display:block; white-space:nowrap; font-size:clamp(13px,3.7vw,20px);}
+/* date + time / venue + address — stacked, each line wraps within the
+   floral-bordered column so long Arabic sentences never spill past the border */
+.inv-date--stack,
+.inv-venue--stack{display:flex; flex-direction:column; align-items:center; gap:3px;}
+.inv-line{
+  display:block; max-width:100%;
+  white-space:normal; overflow-wrap:break-word; text-wrap:balance;
+  line-height:1.45;
+}
+.inv-line--lead{
+  font-family:"Aref Ruqaa",serif; direction:rtl;
+  font-size:clamp(15px,4.2vw,21px); color:var(--ink); font-weight:400;
+}
+.inv-line--sub{
+  font-family:"Aref Ruqaa",serif; direction:rtl;
+  font-size:clamp(13px,3.5vw,17px); color:var(--ink-soft);
+}
+/* English address keeps its serif face but still wraps inside the column */
+.inv-venue--stack .inv-line--sub[dir="ltr"]{
+  direction:ltr;
+  font-family:"Cormorant Garamond",serif; font-style:italic; letter-spacing:.01em;
+}
 .inv-dt-sep{color:var(--gold-1); margin:0 .3em; font-weight:400;}
 
 .inv-venue{font-family:"Cormorant Garamond",serif; font-size:clamp(15px,3.8vw,20px); font-weight:600; color:var(--ink);}

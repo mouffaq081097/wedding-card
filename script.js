@@ -106,7 +106,10 @@ const WEDDING = {
     parts.push(reveal(
       `<div class="inv-block">
          <div class="inv-label">اليَوم</div>
-         <div class="inv-date inv-date--inline"><span class="ar">${esc(W.date.ar)} <span class="inv-dt-sep">·</span> ${esc(W.time.ar)}</span></div>
+         <div class="inv-date inv-date--stack">
+           <span class="inv-line inv-line--lead">${esc(W.date.ar)}</span>
+           <span class="inv-line inv-line--sub">${esc(W.time.ar)}</span>
+         </div>
        </div>`
     ));
 
@@ -114,7 +117,10 @@ const WEDDING = {
     parts.push(reveal(
       `<div class="inv-block">
          <div class="inv-label">المَكان</div>
-         <div class="inv-venue inv-venue--inline"><span class="ar">${esc(W.venue.name.ar)} <span class="inv-dt-sep">·</span> ${esc(W.venue.address)}</span></div>
+         <div class="inv-venue inv-venue--stack">
+           <span class="inv-line inv-line--lead">${esc(W.venue.name.ar)}</span>
+           <span class="inv-line inv-line--sub" dir="ltr">${esc(W.venue.address)}</span>
+         </div>
          <div class="inv-actions">
            <a class="inv-btn inv-btn--ghost" href="${esc(W.venue.mapUrl)}" target="_blank" rel="noopener">
              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
