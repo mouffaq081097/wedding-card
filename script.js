@@ -522,28 +522,6 @@ const WEDDING = {
     Sound.setEnabled(on);
   });
 
-  /* ---------- preloader: fade out once the envelope art is ready ---------- */
-  (function preloader() {
-    const el = $("#preloader");
-    if (!el) return;
-    const start = Date.now();
-    const MIN = 600;   // keep it visible briefly so it doesn't flash
-    const MAX = 4500;  // …but never trap the guest on slow/heavy assets
-    let done = false;
-    const hide = () => {
-      if (done) return; done = true;
-      const wait = Math.max(0, MIN - (Date.now() - start));
-      setTimeout(() => el.classList.add("is-hidden"), wait);
-    };
-    // wait for the closed-envelope image the guest sees first
-    const img = new Image();
-    img.onload = hide; img.onerror = hide;
-    img.src = "Closed.png";
-    if (img.complete) hide();
-    addEventListener("load", hide);
-    setTimeout(hide, MAX);
-  })();
-
   /* ---------- init ---------- */
   renderInvitation();
   Particles.start();
